@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: arboreal-ci
+    runs-on: arboreal-ci-high-ram
     steps:
       - name: Check out code
         uses: actions/checkout@v3
