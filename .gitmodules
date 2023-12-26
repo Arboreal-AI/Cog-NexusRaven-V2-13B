@@ -1,0 +1,3 @@
+[submodule "NexusRaven-V2-13B"]
+	path = NexusRaven-V2-13B
+	url = https://huggingface.co/Nexusflow/NexusRaven-V2-13B
