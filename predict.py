@@ -5,7 +5,7 @@ from cog import BasePredictor, Input, Path
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
-MODEL_NAME = "NexusRaven-V2-13B"
+MODEL_NAME = "NexusRaven-V2-13B-GPTQ"
 MODEL_CACHE = "cache"
 
 EXAMPLE_PROMPT = '''
