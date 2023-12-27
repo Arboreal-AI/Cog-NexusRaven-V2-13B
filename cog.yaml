@@ -9,7 +9,8 @@ build:
   python_version: "3.11"
 
   python_packages:
-    - "transformers"
+    - "transformers==4.33.2"
+    - "safetensors>=0.3.1"
     - "accelerate"
     - "optimum"
     - "https://r2.drysys.workers.dev/torch/11.8/torch-2.1.0-cp311-cp311-linux_x86_64.whl"
