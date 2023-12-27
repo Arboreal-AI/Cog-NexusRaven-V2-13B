@@ -63,7 +63,7 @@ class Predictor(BasePredictor):
         max_new_tokens: int = Input(
             description="Number of new tokens", ge=1, le=4096, default=2048
         ),
-    ) -> Path:
+    ) -> str:
         """Run a single prediction on the model"""
         prompt = prompt_template.format(query=query)
         input_ids = self.tokenizer(prompt, return_tensors="pt").input_ids.cuda()
