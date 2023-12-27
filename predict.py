@@ -2,7 +2,8 @@
 # https://github.com/replicate/cog/blob/main/docs/python.md
 
 from cog import BasePredictor, Input, Path
-from transformers import pipeline
+import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM
 
 MODEL_NAME = "NexusRaven-V2-13B"
 MODEL_CACHE = "cache"
@@ -19,7 +20,6 @@ def get_weather_data(coordinates):
     Returns:
     float: The current temperature in the coordinates you've asked for
     """
-
 Function:
 def get_coordinates_from_city(city_name):
     """
@@ -31,9 +31,7 @@ def get_coordinates_from_city(city_name):
     Returns:
     tuple: The latitude and longitude of the city.
     """
-
 User Query: {query}<human_end>
-
 '''
 
 EXAMPLE_QUERY = "What's the weather like in Seattle right now?"
@@ -42,12 +40,15 @@ EXAMPLE_QUERY = "What's the weather like in Seattle right now?"
 class Predictor(BasePredictor):
     def setup(self) -> None:
         """Load the model into memory to make running multiple predictions efficient"""
-        self.pipeline = pipeline(
-            "text-generation",
-            model=MODEL_NAME,
-            torch_dtype="auto",
-            device_map="auto",
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            MODEL_NAME, use_fast=True, cache_dir=MODEL_CACHE
         )
+
+        model = AutoModelForCausalLM.from_pretrained(
+            MODEL_NAME, device_map="auto", trust_remote_code=False, revision="main"
+        )
+
+        self.model = torch.compile(model)
 
     def predict(
         self,
@@ -65,11 +66,8 @@ class Predictor(BasePredictor):
     ) -> Path:
         """Run a single prediction on the model"""
         prompt = prompt_template.format(query=query)
-        result = self.pipeline(
-            prompt,
-            max_new_tokens=max_new_tokens,
-            return_full_text=False,
-            do_sample=False,
-            temperature=0.001,
-        )[0]["generated_text"]
-        return result
+        input_ids = self.tokenizer(prompt, return_tensors="pt").input_ids.cuda()
+        output = self.model.generate(
+            inputs=input_ids, do_sample=False, top_p=0.90, max_new_tokens=max_new_tokens
+        )
+        return self.tokenizer.decode(output[0])

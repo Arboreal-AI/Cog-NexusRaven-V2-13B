@@ -9,9 +9,17 @@ build:
   python_version: "3.11"
 
   python_packages:
-    - "torch"
     - "transformers"
     - "accelerate"
+    - "optimum"
+    - "https://r2.drysys.workers.dev/torch/11.8/torch-2.1.0-cp311-cp311-linux_x86_64.whl"
+
+  # commands run after the environment is setup
+  run:
+    - pip install auto-gptq --extra-index-url https://huggingface.github.io/autogptq-index/whl/cu118/
+    - curl -o /usr/local/bin/pget -L "https://github.com/replicate/pget/releases/download/v0.1.1/pget" && chmod +x /usr/local/bin/pget
+    # since we can't do LD_LIBRARY_PATH=torch/lib, use this to make sure mlc can access the cuda libs bundled with torch
+    - bash -c 'ln -s /usr/local/lib/python3.11/site-packages/torch/lib/lib{nv,cu}* /usr/lib'
 
 # predict.py defines how predictions are run on your model
 predict: "predict.py:Predictor"
