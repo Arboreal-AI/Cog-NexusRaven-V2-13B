@@ -1,3 +1,4 @@
-[submodule "NexusRaven-V2-13B"]
-	path = NexusRaven-V2-13B
-	url = https://huggingface.co/Nexusflow/NexusRaven-V2-13B
+[submodule "NexusRaven-V2-13B-GPTQ"]
+	path = NexusRaven-V2-13B-GPTQ
+	url = https://huggingface.co/TheBloke/NexusRaven-V2-13B-GPTQ
+	branch = gptq-8bit-32g-actorder_True

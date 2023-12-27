@@ -63,9 +63,6 @@ class Predictor(BasePredictor):
         max_new_tokens: int = Input(
             description="Number of new tokens", ge=1, le=4096, default=2048
         ),
-        top_p: float = Input(
-            description="Top p value for sampling", ge=0.0, le=1.0, default=0.90
-        ),
     ) -> Path:
         """Run a single prediction on the model"""
         prompt = prompt_template.format(query=query)
@@ -73,7 +70,6 @@ class Predictor(BasePredictor):
         output = self.model.generate(
             inputs=input_ids,
             do_sample=False,
-            top_p=top_p,
             max_new_tokens=max_new_tokens,
         )
         return self.tokenizer.decode(output[0])
