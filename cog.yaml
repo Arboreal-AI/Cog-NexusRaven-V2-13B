@@ -9,15 +9,16 @@ build:
   python_version: "3.11"
 
   python_packages:
-    - "transformers==4.33.2"
+    - "https://r2.drysys.workers.dev/torch/11.8/torch-2.1.0-cp311-cp311-linux_x86_64.whl"
+    - "transformers==4.36.0"
+    - "https://github.com/casper-hansen/AutoAWQ/releases/download/v0.1.8/autoawq-0.1.8+cu118-cp311-cp311-linux_x86_64.whl"
     - "safetensors>=0.3.1"
     - "accelerate"
     - "optimum"
-    - "https://r2.drysys.workers.dev/torch/11.8/torch-2.1.0-cp311-cp311-linux_x86_64.whl"
 
   # commands run after the environment is setup
   run:
-    - pip install auto-gptq --extra-index-url https://huggingface.github.io/autogptq-index/whl/cu118/
+    - pip install flash-attn --no-build-isolation
     - curl -o /usr/local/bin/pget -L "https://github.com/replicate/pget/releases/download/v0.1.1/pget" && chmod +x /usr/local/bin/pget
     # since we can't do LD_LIBRARY_PATH=torch/lib, use this to make sure mlc can access the cuda libs bundled with torch
     - bash -c 'ln -s /usr/local/lib/python3.11/site-packages/torch/lib/lib{nv,cu}* /usr/lib'

@@ -5,7 +5,7 @@ from cog import BasePredictor, Input, Path
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
-MODEL_NAME = "NexusRaven-V2-13B-GPTQ"
+MODEL_NAME = "NexusRaven-V2-13B-AWQ"
 MODEL_CACHE = "cache"
 
 EXAMPLE_PROMPT = '''
@@ -45,7 +45,11 @@ class Predictor(BasePredictor):
         )
 
         model = AutoModelForCausalLM.from_pretrained(
-            MODEL_NAME, device_map="auto", trust_remote_code=False, revision="main"
+            MODEL_NAME,
+            device_map="auto",
+            trust_remote_code=False,
+            revision="main",
+            attn_implementation="flash_attention_2",
         )
 
         self.model = torch.compile(model)
